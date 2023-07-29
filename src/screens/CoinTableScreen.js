@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Modal } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity,ActivityIndicator, Image, Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { fetchCoinData } from "../services/fetchCoin";
 import { coinTableStyles } from "../styles/coinTableStyles";
@@ -7,6 +7,7 @@ import { coinTableStyles } from "../styles/coinTableStyles";
 import CoinRow from "../components/CoinRow";
 
 const CoinTableScreen = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [coinData, setCoinData] = useState([]);
   const [sortOption, setSortOption] = useState("asc"); // "asc" or "desc"
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
@@ -20,17 +21,25 @@ const CoinTableScreen = () => {
       if (dataCache["coinData"]) {
         // If data is available in cache, use it
         setCoinData(dataCache["coinData"]);
+        setIsLoading(false);
       } else {
         // Otherwise, fetch data from the API
-        const data = await fetchCoinData();
-        // Update the cache with the new data
-        dataCache["coinData"] = data;
-        setCoinData(data);
+        try {
+          const data = await fetchCoinData();
+          // Update the cache with the new data
+          dataCache["coinData"] = data;
+          setCoinData(data);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setIsLoading(false);
+        }
       }
     };
 
     fetchData();
   }, []);
+
 
   const navigation = useNavigation();
   const handleNavigateToChart = (symbol) => {
@@ -100,12 +109,19 @@ const CoinTableScreen = () => {
             </Text>
           </View>
         </View>
+        {isLoading ? (
+        <View style={coinTableStyles.loaderContainer}>
+          <ActivityIndicator size="large" color="green" />
+          {/* <Text style={coinTableStyles.loaderText}>Loading...</Text> */}
+        </View>
+      ) : (
         <FlatList
           data={coinData}
           renderItem={renderCoinRow}
           keyExtractor={(item) => item.id}
           contentContainerStyle={coinTableStyles.listContent}
         />
+      )}
       </View>
       <Modal
         animationType="slide"

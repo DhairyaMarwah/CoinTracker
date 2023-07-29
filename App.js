@@ -1,14 +1,16 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import SplashScreen from './src/screens/SplashScreen';
 import CoinTableScreen from './src/screens/CoinTableScreen';
-import CoinChartScreen from './src/screens/CoinChartScreen';
-
+import CoinChartScreen from './src/screens/CoinChartScreen'; 
+ 
 const Stack = createStackNavigator();
 
-const App = () => {
+const App = () => { 
+  
+  
   return (
     <NavigationContainer>
       <Stack.Navigator
