@@ -4,9 +4,9 @@ Coin Tracker is a mobile app built with React Native that allows users to discov
 
 ## Screenshots
 
-![Screenshot 1](./screenshots/screenshot1.png)
-![Screenshot 2](./screenshots/screenshot2.png)
-![Screenshot 3](./screenshots/screenshot3.png)
+![Screenshot 1](./screenshots/1.png)
+![Screenshot 2](./screenshots/2.png)
+![Screenshot 3](./screenshots/3.png)
 
 ## Installation and Setup
 
@@ -15,4 +15,4 @@ Coin Tracker is a mobile app built with React Native that allows users to discov
 2. Clone this repository to your local machine using:
 
 ```bash
-git clone https://github.com/your-username/coin-tracker-app.git
+git clone https://github.com/DhairyaMarwah/CoinTracker.git
