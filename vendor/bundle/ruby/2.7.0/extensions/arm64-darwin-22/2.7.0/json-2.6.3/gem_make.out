@@ -1,0 +1,13 @@
+current directory: /Users/dhairya/Documents/demo_app/rn-app/vendor/bundle/ruby/2.7.0/gems/json-2.6.3/ext/json
+/Users/dhairya/.rvm/rubies/ruby-2.7.5/bin/ruby -I /Users/dhairya/.rvm/rubies/ruby-2.7.5/lib/ruby/2.7.0 -r ./siteconf20230108-91277-1ok11mg.rb extconf.rb
+creating Makefile
+
+current directory: /Users/dhairya/Documents/demo_app/rn-app/vendor/bundle/ruby/2.7.0/gems/json-2.6.3/ext/json
+make "DESTDIR=" clean
+
+current directory: /Users/dhairya/Documents/demo_app/rn-app/vendor/bundle/ruby/2.7.0/gems/json-2.6.3/ext/json
+make "DESTDIR="
+make: Nothing to be done for `all'.
+
+current directory: /Users/dhairya/Documents/demo_app/rn-app/vendor/bundle/ruby/2.7.0/gems/json-2.6.3/ext/json
+make "DESTDIR=" install
