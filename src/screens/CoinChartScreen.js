@@ -9,11 +9,22 @@ const CoinChartScreen = ({ route }) => {
   const [historicalData, setHistoricalData] = useState([]);
   const [selectedPoint, setSelectedPoint] = useState(null);
 
+  // In-memory cache to store historical data
+  const dataCache = {};
+
   useEffect(() => {
-    // Fetch real historical price data for the selected coin
+    // Function to fetch historical data for a coin
     const fetchData = async () => {
-      const data = await fetchHistoricalData(symbol);
-      setHistoricalData(data);
+      if (dataCache[symbol]) {
+        // If data is available in cache, use it
+        setHistoricalData(dataCache[symbol]);
+      } else {
+        // Otherwise, fetch data from the API
+        const data = await fetchHistoricalData(symbol);
+        // Update the cache with the new data
+        dataCache[symbol] = data;
+        setHistoricalData(data);
+      }
     };
 
     fetchData();

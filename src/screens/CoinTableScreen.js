@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Modal,
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { fetchCoinData } from "../services/fetchCoin";
-import {coinTableStyles} from "../styles/coinTableStyles";
+import { coinTableStyles } from "../styles/coinTableStyles";
 
 import CoinRow from "../components/CoinRow";
 
@@ -19,42 +11,58 @@ const CoinTableScreen = () => {
   const [sortOption, setSortOption] = useState("asc"); // "asc" or "desc"
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
 
+  // In-memory cache to store fetched coin data
+  const dataCache = {};
+
   useEffect(() => {
+    // Function to fetch coin data
     const fetchData = async () => {
-      const data = await fetchCoinData();
-      setCoinData(data);
+      if (dataCache["coinData"]) {
+        // If data is available in cache, use it
+        setCoinData(dataCache["coinData"]);
+      } else {
+        // Otherwise, fetch data from the API
+        const data = await fetchCoinData();
+        // Update the cache with the new data
+        dataCache["coinData"] = data;
+        setCoinData(data);
+      }
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   const navigation = useNavigation();
-
   const handleNavigateToChart = (symbol) => {
     navigation.navigate("CoinChartModal", { symbol });
   };
 
+  // Function to handle sorting and caching
   const handleFilterChange = (option) => {
-    setSortOption(option);
+    if (sortOption === option) {
+      return; // Data is already sorted based on the selected option
+    }
+
     // Apply the sorting logic here based on the selected option ("asc" or "desc")
     const sortedData = coinData.slice().sort((a, b) => {
       if (option === "asc") {
-        return (
-          a.market_data.current_price.usd - b.market_data.current_price.usd
-        );
+        return a.market_data.current_price.usd - b.market_data.current_price.usd;
       } else {
-        return (
-          b.market_data.current_price.usd - a.market_data.current_price.usd
-        );
+        return b.market_data.current_price.usd - a.market_data.current_price.usd;
       }
     });
+
+    // Update the cache with the sorted data
+    dataCache["coinData"] = sortedData;
     setCoinData(sortedData);
+
+    setSortOption(option);
   };
 
   const toggleFilterModal = () => {
     setIsFilterModalVisible((prev) => !prev);
   };
- 
+
   const renderCoinRow = ({ item }) => (
     <CoinRow item={item} onNavigateToChart={handleNavigateToChart} />
   );
@@ -130,6 +138,5 @@ const CoinTableScreen = () => {
     </View>
   );
 };
- 
 
 export default CoinTableScreen;
