@@ -1,101 +1,135 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { fetchCoinData } from "../services/fetchCoin";
+import {coinTableStyles} from "../styles/coinTableStyles";
+
+import CoinRow from "../components/CoinRow";
 
 const CoinTableScreen = () => {
   const [coinData, setCoinData] = useState([]);
+  const [sortOption, setSortOption] = useState("asc"); // "asc" or "desc"
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
 
   useEffect(() => {
-    const fetchCoinData = async () => {
-      try {
-        const response = await fetch('https://api.coingecko.com/api/v3/coins/');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-        setCoinData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+    const fetchData = async () => {
+      const data = await fetchCoinData();
+      setCoinData(data);
     };
 
-    fetchCoinData();
-  }, []);
+    fetchData();
+  }, []); 
 
   const navigation = useNavigation();
 
   const handleNavigateToChart = (symbol) => {
-    navigation.navigate('CoinChart', { symbol });
+    navigation.navigate("CoinChartModal", { symbol });
   };
 
+  const handleFilterChange = (option) => {
+    setSortOption(option);
+    // Apply the sorting logic here based on the selected option ("asc" or "desc")
+    const sortedData = coinData.slice().sort((a, b) => {
+      if (option === "asc") {
+        return (
+          a.market_data.current_price.usd - b.market_data.current_price.usd
+        );
+      } else {
+        return (
+          b.market_data.current_price.usd - a.market_data.current_price.usd
+        );
+      }
+    });
+    setCoinData(sortedData);
+  };
+
+  const toggleFilterModal = () => {
+    setIsFilterModalVisible((prev) => !prev);
+  };
+ 
   const renderCoinRow = ({ item }) => (
-    <TouchableOpacity onPress={() => handleNavigateToChart(item.id)}>
-      <View style={styles.rowContainer}>
-        <Image style={styles.coinImage} source={{ uri: item.image.small }} />
-        <Text style={styles.cell}>{item.name}</Text>
-        <Text style={styles.cell}>{item.symbol.toUpperCase()}</Text>
-      </View>
-    </TouchableOpacity>
+    <CoinRow item={item} onNavigateToChart={handleNavigateToChart} />
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.headerCell}>Icon</Text>
-        <Text style={styles.headerCell}>Name</Text>
-        <Text style={styles.headerCell}>Symbol</Text>
+    <View style={coinTableStyles.container}>
+      <View style={coinTableStyles.header}>
+        <Text style={coinTableStyles.headerHeading}>Hello, Dhairya 👋</Text>
+        <Text style={coinTableStyles.headerSubtitle}>
+          Discover cryptocurrencies today!
+        </Text>
       </View>
-      <FlatList
-        data={coinData}
-        renderItem={renderCoinRow}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-      />
+      <View style={coinTableStyles.listContainer}>
+        <View style={coinTableStyles.headerFlex}>
+          <View style={coinTableStyles.listHeader}>
+            <Text style={coinTableStyles.listHeading}>Market</Text>
+            <Text style={coinTableStyles.listSubtitle}>
+              Sort by :
+              <Text style={coinTableStyles.listSubtitleFilter}>
+                {sortOption === "asc" ? "Ascending" : "Descending"}
+              </Text>
+            </Text>
+          </View>
+          <View style={coinTableStyles.listHeading}>
+            <Text style={coinTableStyles.listHeading}>
+              <TouchableOpacity
+                style={coinTableStyles.filterIconContainer}
+                onPress={toggleFilterModal}
+              >
+                <Image
+                  style={coinTableStyles.filterIcon}
+                  source={require("../assets/filter.png")}
+                />
+              </TouchableOpacity>
+            </Text>
+          </View>
+        </View>
+        <FlatList
+          data={coinData}
+          renderItem={renderCoinRow}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={coinTableStyles.listContent}
+        />
+      </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isFilterModalVisible}
+        onRequestClose={toggleFilterModal}
+      >
+        <View style={coinTableStyles.modalContainer}>
+          {/* Design your filter options here */}
+          <TouchableOpacity
+            style={coinTableStyles.filterOption}
+            onPress={() => {
+              handleFilterChange("asc");
+              toggleFilterModal();
+            }}
+          >
+            <Text style={coinTableStyles.filterOptionText}>Ascending</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={coinTableStyles.filterOption}
+            onPress={() => {
+              handleFilterChange("desc");
+              toggleFilterModal();
+            }}
+          >
+            <Text style={coinTableStyles.filterOptionText}>Descending</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 24,
-    backgroundColor: '#1A1A1A', // Dark background color
-  },
-  headerRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#444', // Darker border color
-    paddingBottom: 8,
-    marginBottom: 8,
-    fontWeight: 'bold',
-  },
-  headerCell: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#EFEFEF', // Light text color
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#444', // Darker border color
-    paddingBottom: 8,
-    marginBottom: 8,
-  },
-  cell: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#EFEFEF', // Light text color
-  },
-  coinImage: {
-    width: 32,
-    height: 32,
-    marginRight: 8,
-  },
-  listContent: {
-    paddingBottom: 16,
-  },
-});
+ 
 
 export default CoinTableScreen;

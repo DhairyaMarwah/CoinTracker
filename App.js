@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import SplashScreen from './src/screens/SplashScreen';
@@ -8,7 +7,6 @@ import CoinTableScreen from './src/screens/CoinTableScreen';
 import CoinChartScreen from './src/screens/CoinChartScreen';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
@@ -26,8 +24,16 @@ const App = () => {
           component={SplashScreen}
           options={{ headerShown: false }} // Hide the header for the SplashScreen
         />
-        <Stack.Screen name="CoinTable" component={CoinTableScreen} />
-        <Stack.Screen name="CoinChart" component={CoinChartScreen} />
+        <Stack.Screen name="CoinTable" component={CoinTableScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="CoinChartModal"
+          component={CoinChartScreen}
+          options={{
+            headerShown: true,
+            headerTitle: 'Coin Price Chart', // Customize the header title for the modal
+          }}
+          presentation="modal" // Set the presentation to "modal" to show it as a modal
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
