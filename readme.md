@@ -16,3 +16,19 @@ Coin Tracker is a mobile app built with React Native that allows users to discov
 
 ```bash
 git clone https://github.com/DhairyaMarwah/CoinTracker.git
+
+
+
+Make sure you have Xcode installed for running the iOS simulator.
+
+The app should now be running on your Android emulator, connected Android device, or iOS simulator.
+
+# Dependencies
+This project uses the following main dependencies:
+
+React Native
+react-native-animatable
+lottie-react-native
+react-navigation
+For more detailed dependencies, please refer to the package.json file.
+```
