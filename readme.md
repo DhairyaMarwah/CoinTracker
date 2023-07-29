@@ -10,6 +10,7 @@ Coin Tracker is a mobile app built with React Native that allows users to discov
 
 ## Installation and Setup
 
+
 1. Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed on your machine.
 
 2. Clone this repository to your local machine using:
@@ -17,6 +18,22 @@ Coin Tracker is a mobile app built with React Native that allows users to discov
 ```bash
 git clone https://github.com/DhairyaMarwah/CoinTracker.git
 ```
+
+## Installation guide
+
+To install the dependencies
+
+```bash
+  npm install
+```
+
+
+To run app on ios simulator
+
+```bash
+  npx react-native run-ios
+```
+
 
 
 Make sure you have Xcode installed for running the iOS simulator.
