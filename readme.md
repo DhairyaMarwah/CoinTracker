@@ -16,7 +16,7 @@ Coin Tracker is a mobile app built with React Native that allows users to discov
 
 ```bash
 git clone https://github.com/DhairyaMarwah/CoinTracker.git
-
+```
 
 
 Make sure you have Xcode installed for running the iOS simulator.
@@ -26,9 +26,30 @@ The app should now be running on your Android emulator, connected Android device
 # Dependencies
 This project uses the following main dependencies:
 
-React Native
-react-native-animatable
-lottie-react-native
-react-navigation
+1. React Native
+2. react-native-animatable
+3. lottie-react-native
+4. react-navigation
+
 For more detailed dependencies, please refer to the package.json file.
+
+# Folder Structure 
+```
+src/
+  ├── assets/
+  |   └── ... (contains assets such as images, animations, etc.)
+  ├── components/
+  |   └── ... (contains reusable components)
+  ├── services/
+  |   └── fetchCoin.js (API service for fetching coin data)
+      └── fetchCoinHistory.js (API service for fetching chart data)
+  ├── styles/
+  |   └── ... (contains styling files)
+  ├── App.js (entry point of the app)
+  ├── screens/
+  |   └── CoinChartScreen.js (Screen for Chart)
+      └── CoinTableScreen.js (main screen component)
+      └── SplashScreen.js (Splash Screen for app)
+  └── ... (other project files)
+
 ```
